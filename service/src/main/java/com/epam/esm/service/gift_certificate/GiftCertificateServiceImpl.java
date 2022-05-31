@@ -4,8 +4,10 @@ import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
 import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
+import com.epam.esm.exception.tag.InvalidTagException;
 import com.epam.esm.repository.gift_certificate.GiftCertificateRepository;
 import com.epam.esm.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     @Override
     @Transactional
     public GiftCertificateGetResponse create(GiftCertificatePostRequest createCertificate) {
-        validator(createCertificate);
         List<TagEntity> tagEntities = createCertificate.getTagEntities();
         GiftCertificateEntity certificateEntity = modelMapper.map(createCertificate, GiftCertificateEntity.class);
         if(createCertificate.getTagEntities() != null && certificateEntity.getTagEntities().size() != 0)
@@ -83,7 +86,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     @Override
     @Transactional
     public GiftCertificateGetResponse update(GiftCertificatePostRequest update, Long certificateId) {
-        validator(update);
         Optional<GiftCertificateEntity> old = giftCertificateRepository.findById(certificateId);
         if(old.isEmpty())
             throw new NoDataFoundException("certificate with id: " + certificateId + " not found");
@@ -136,6 +138,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     private List<TagEntity> createTags(List<TagEntity> tagEntities){
         List<TagEntity> tagEntityList = new ArrayList<>();
         tagEntities.forEach(tag -> {
+            if(tag.getName() == null || tag.getName().isEmpty()) {
+                throw new InvalidTagException("tag name cannot be empty or null");
+            }
             TagEntity byName = tagRepository.findByName(tag.getName());
             if(byName != null){
                 tagEntityList.add(byName);

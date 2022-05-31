@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.NumberFormat;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,13 +16,13 @@ import java.util.List;
 @Getter
 @Setter
 public class GiftCertificatePostRequest {
-    @NotBlank(message = "name can't be null or blank")
+    @NotBlank(message = "name can't be null or empty")
     private String name;
-    @NotBlank(message = "description can't be null or blank")
+    @NotBlank(message = "description can't be null or empty")
     private String description;
-    @PositiveOrZero(message = "prise should be 0 or more")
+    @DecimalMin(message = "price cannot be negative", value = "0.00")
     private BigDecimal price;
-    @Positive(message = "duration should be more than 0")
+    @Positive(message = "duration should be positive")
     private Integer duration;
     private List<TagEntity> tagEntities;
 }

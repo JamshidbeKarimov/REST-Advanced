@@ -13,11 +13,5 @@ import java.util.List;
 public interface TagService extends BaseService<TagPostRequest, TagGetResponse> {
     List<TagGetResponse> getAll(int limit, int offset);
 
-    TagGetResponse getMostWidelyUserTagOfUser(Long userId);
-
-    @Override
-    default void validator(TagPostRequest createTag){
-        if(createTag.getName() == null)
-            throw new InvalidTagException("Tag name cannot be empty");
-    }
+    List<TagGetResponse> getMostWidelyUsedTagsOfUser(Long userId);
 }

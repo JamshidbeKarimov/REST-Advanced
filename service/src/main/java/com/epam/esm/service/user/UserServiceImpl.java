@@ -1,8 +1,8 @@
 package com.epam.esm.service.user;
 
-import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.UserGetResponse;
 import com.epam.esm.dto.request.UserPostRequest;
+import com.epam.esm.exception.DataAlreadyExistException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.entity.UserEntity;
 import com.epam.esm.repository.user.UserRepository;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserGetResponse create(UserPostRequest userPostRequest) {
-        validator(userPostRequest);
+        checkExist(userPostRequest.getUsername());
         UserEntity userEntity = modelMapper.map(userPostRequest, UserEntity.class);
         UserEntity saved = userRepository.create(userEntity);
         return modelMapper.map(saved, UserGetResponse.class);
@@ -52,5 +52,10 @@ public class UserServiceImpl implements UserService{
             throw new NoDataFoundException("no users found");
         return modelMapper.map(userEntities, new TypeToken<List<UserGetResponse>>() {
         }.getType());
+    }
+//
+    void checkExist(String username){
+        if(userRepository.findByName(username).isPresent())
+            throw new DataAlreadyExistException("user with username: " + username + "already exists");
     }
 }

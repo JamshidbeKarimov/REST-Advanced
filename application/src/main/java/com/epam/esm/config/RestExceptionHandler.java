@@ -2,6 +2,7 @@ package com.epam.esm.config;
 
 import com.epam.esm.dto.reponse.BaseExceptionResponse;
 import com.epam.esm.exception.DataAlreadyExistException;
+import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.exception.UnknownDataBaseException;
 import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
@@ -9,9 +10,14 @@ import com.epam.esm.exception.tag.InvalidTagException;
 import com.epam.esm.exception.user.InvalidUserException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -70,6 +76,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(500).body(
                 new BaseExceptionResponse(500, e.getMessage(), 10500)
         );
+    }
+
+    @ExceptionHandler({InvalidInputException.class})
+    public ResponseEntity<BaseExceptionResponse> invalidInputException(InvalidInputException e){
+        StringBuilder message = new StringBuilder();
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            message.append(error.getDefaultMessage() + "\n");
+        });
+        return ResponseEntity.badRequest()
+                .body(new BaseExceptionResponse(400, message.toString(), 10400));
     }
 
 }

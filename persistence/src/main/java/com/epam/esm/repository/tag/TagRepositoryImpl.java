@@ -17,7 +17,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public TagEntity create(TagEntity tagEntity) {
         entityManager.persist(tagEntity);
-        if(tagEntity.getId() != null)
+        if (tagEntity.getId() != null)
             return tagEntity;
         return null;
     }
@@ -34,7 +34,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Optional<TagEntity> findById(Long id) {
         TagEntity tagEntity = entityManager.find(TagEntity.class, id);
-        if(tagEntity != null)
+        if (tagEntity != null)
             return Optional.of(tagEntity);
         return Optional.empty();
     }
@@ -58,23 +58,24 @@ public class TagRepositoryImpl implements TagRepository {
                             "select t from TagEntity t where t.name = :name", TagEntity.class)
                     .setParameter("name", name).getSingleResult();
             return tag;
-        } catch (NoResultException e){
+        } catch (NoResultException e) {
             return null;
         }
     }
 
     @Override
-    public TagEntity getMostWidelyUserTagOfUser(Long userId) {
-//        TagEntity tagEntity = entityManager.createQuery("SELECT t FROM users u " +
-//                                                 "JOIN u.orders o " +
-//                                                 "JOIN o.certificate.tagEntities t " +
-//                                                 "WHERE u.id = :id " +
-//                                                 "GROUP BY t.id, t.name " +
-//                                                 "ORDER BY SUM(o.price), COUNT(t) DESC limit 1", TagEntity.class)
-//                .setParameter("id", userId)
-//                .getSingleResult();
-//
-//        return tagEntity;
-        return null;
+    public List<TagEntity> getMostWidelyUserTagOfUser(Long userId) {
+        List tags = entityManager.createNativeQuery("""
+                        select t from tag t where t.id in (select ct.tag_id from certificate_tag ct where ct.certificate_id in
+                                         (select gc.id from gift_certificate gc where gc.id in
+                                                   (select o.certificate_id from orders o where o.user_id = :userId))
+                        group by ct.tag_id having count(ct.tag_id) = (
+                            select count(ct.tag_id) from certificate_tag ct where ct.certificate_id in
+                                                    (select gc.id from gift_certificate gc where gc.id in 
+                                                            (select o.certificate_id from orders o where o.user_id = :userId))
+                            group by ct.tag_id order by count(ct.tag_id) desc limit 1));""", TagEntity.class)
+                .setParameter("userId", userId)
+                .getResultList();
+        return tags;
     }
 }

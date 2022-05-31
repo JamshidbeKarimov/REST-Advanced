@@ -3,12 +3,15 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
+import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.gift_certificate.GiftCertificateService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -23,8 +26,11 @@ public class GiftCertificateController {
 
     @PostMapping(value = "/create")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> create(
-            @RequestBody GiftCertificatePostRequest createCertificate
+            @Valid @RequestBody GiftCertificatePostRequest createCertificate,
+            BindingResult bindingResult
             ){
+        if(bindingResult.hasErrors())
+            throw new InvalidInputException(bindingResult);
         GiftCertificateGetResponse response = giftCertificateService.create(createCertificate);
         response.add(linkTo(methodOn(OrderController.class)
                 .getOrdersForCertificate(response.getId(), 100, 0))
@@ -95,9 +101,12 @@ public class GiftCertificateController {
 
     @PatchMapping(value = "/update")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> update(
-            @RequestBody GiftCertificatePostRequest update,
+            @Valid @RequestBody GiftCertificatePostRequest update,
+            BindingResult bindingResult,
             @RequestParam(value = "id") Long certificateId
     ){
+        if(bindingResult.hasErrors())
+            throw new InvalidInputException(bindingResult);
         GiftCertificateGetResponse response = giftCertificateService.update(update, certificateId);
         response.add(linkTo(methodOn(OrderController.class)
                 .getOrdersForCertificate(response.getId(), 100, 0))

@@ -3,11 +3,14 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.UserGetResponse;
 import com.epam.esm.dto.request.UserPostRequest;
+import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -21,7 +24,10 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<UserGetResponse>> create(
-            @RequestBody UserPostRequest userPostRequest){
+            @Valid @RequestBody UserPostRequest userPostRequest,
+            BindingResult bindingResult){
+        if(bindingResult.hasErrors())
+            throw new InvalidInputException(bindingResult);
         UserGetResponse createdUser = userService.create(userPostRequest);
         createdUser.add(linkTo(methodOn(OrderController.class)
                 .getUserOrders(createdUser.getId(), 100, 0)).withRel("user orders"));

@@ -4,12 +4,15 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.TagGetResponse;
 import com.epam.esm.dto.request.TagPostRequest;
+import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.tag.TagService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,8 +24,11 @@ public class TagController {
 
     @PostMapping(value = "/create")
     public ResponseEntity<BaseResponse<TagGetResponse>> create(
-            @RequestBody TagPostRequest tag
+            @Valid @RequestBody TagPostRequest tag,
+            BindingResult bindingResult
     ){
+        if(bindingResult.hasErrors())
+            throw new InvalidInputException(bindingResult);
         TagGetResponse response = tagService.create(tag);
         return ResponseEntity.status(201).body(new BaseResponse<>(201, "tag created", response));
     }
@@ -55,10 +61,10 @@ public class TagController {
     }
 
     @GetMapping(value = "/getMostUsed")
-    public ResponseEntity<BaseResponse<TagGetResponse>> getMostUsed(
+    public ResponseEntity<BaseResponse<List<TagGetResponse>>> getMostUsed(
             @RequestParam(name = "id") Long userId
     ){
-//        TagGetResponse response = tagService.getMostWidelyUserTagOfUser(userId);
-        return ResponseEntity.ok(new BaseResponse<>(200, "tag", null));
+        List<TagGetResponse> mostWidelyUsedTagsOfUser = tagService.getMostWidelyUsedTagsOfUser(userId);
+        return ResponseEntity.ok(new BaseResponse<>(200, "tag", mostWidelyUsedTagsOfUser));
     }
 }

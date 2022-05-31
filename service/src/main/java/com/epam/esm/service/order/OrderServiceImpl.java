@@ -1,6 +1,5 @@
 package com.epam.esm.service.order;
 
-import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.OrderGetResponse;
 import com.epam.esm.dto.request.OrderPostRequest;
 import com.epam.esm.entity.GiftCertificateEntity;
@@ -55,19 +54,6 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public void validator(OrderPostRequest orderPostRequest) {
-        if(userRepository.findById(orderPostRequest.getUserId()).isEmpty())
-            throw new NoDataFoundException(
-                    "there is not user with id: " + orderPostRequest.getUserId() + "for this order");
-        if(giftCertificateRepository.findById(orderPostRequest.getCertificateId()).isEmpty())
-            throw new NoDataFoundException(
-                    "ordered certificate with id: " + orderPostRequest.getCertificateId() + " does not exist");
-        if(orderRepository.getByUserIdAndCertificateId(
-                orderPostRequest.getUserId(), orderPostRequest.getCertificateId()).isPresent())
-            throw new DataAlreadyExistException("this user already ordered this type of certificate");
-    }
-
-    @Override
     public List<OrderGetResponse> getOrdersByUserId(Long userId, int limit, int offset) {
         List<OrderEntity> orders = orderRepository.getOrdersByUserId(userId, limit, offset);
         if(orders.isEmpty()){
@@ -96,4 +82,17 @@ public class OrderServiceImpl implements OrderService{
         }.getType());
     }
 
+
+    @Override
+    public void validator(OrderPostRequest orderPostRequest) {
+        if(userRepository.findById(orderPostRequest.getUserId()).isEmpty())
+            throw new NoDataFoundException(
+                    "there is not user with id: " + orderPostRequest.getUserId() + " for this order");
+        if(giftCertificateRepository.findById(orderPostRequest.getCertificateId()).isEmpty())
+            throw new NoDataFoundException(
+                    "ordered certificate with id: " + orderPostRequest.getCertificateId() + " does not exist");
+        if(orderRepository.getByUserIdAndCertificateId(
+                orderPostRequest.getUserId(), orderPostRequest.getCertificateId()).isPresent())
+            throw new DataAlreadyExistException("this user already ordered this type of certificate");
+    }
 }

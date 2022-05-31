@@ -5,9 +5,11 @@ import com.epam.esm.entity.TagEntity;
 import com.epam.esm.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TagRepository extends CrudRepository<TagEntity, Long> {
     TagEntity findByName(String name);
 
-    TagEntity getMostWidelyUserTagOfUser(Long userId);
+    List<TagEntity> getMostWidelyUserTagOfUser(Long userId);
 }

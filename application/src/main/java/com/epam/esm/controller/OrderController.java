@@ -3,11 +3,14 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.OrderGetResponse;
 import com.epam.esm.dto.request.OrderPostRequest;
+import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,8 +21,11 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<OrderGetResponse>> create(
-            @RequestBody OrderPostRequest orderPostRequest
+            @Valid @RequestBody OrderPostRequest orderPostRequest,
+            BindingResult bindingResult
             ){
+        if(bindingResult.hasErrors())
+            throw new InvalidInputException(bindingResult);
         OrderGetResponse response = orderService.create(orderPostRequest);
         return ResponseEntity.status(201).body(new BaseResponse<>(201, "certificate ordered", response));
     }

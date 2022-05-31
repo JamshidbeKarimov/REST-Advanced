@@ -23,18 +23,18 @@ public interface GiftCertificateService extends BaseService<GiftCertificatePostR
 
     List<GiftCertificateGetResponse> searchWithMultipleTags(List<String> tags, int limit, int offset);
 
-    @Override
-    default void validator(GiftCertificatePostRequest certificate){
-        if(certificate.getName() == null || certificate.getName().length() == 0)
-            throw new InvalidCertificateException("Gift certificate name cannot be empty or null");
-        if(certificate.getDuration() != null && certificate.getDuration() <= 0)
-            throw  new InvalidCertificateException(
-                    "certificate duration should be positive"
-            );
-        if(certificate.getPrice() != null && certificate.getPrice().compareTo(new BigDecimal(0)) == - 1)
-            throw  new InvalidCertificateException(
-                    "certificate price cannot be negative"
-            );
-    }
+//    @Override
+//    default void validator(GiftCertificatePostRequest certificate){
+//        if(certificate.getName() == null || certificate.getName().length() == 0)
+//            throw new InvalidCertificateException("Gift certificate name cannot be empty or null");
+//        if(certificate.getDuration() != null && certificate.getDuration() <= 0)
+//            throw  new InvalidCertificateException(
+//                    "certificate duration should be positive"
+//            );
+//        if(certificate.getPrice() != null && certificate.getPrice().compareTo(new BigDecimal(0)) == - 1)
+//            throw  new InvalidCertificateException(
+//                    "certificate price cannot be negative"
+//            );
+//    }
 
 }

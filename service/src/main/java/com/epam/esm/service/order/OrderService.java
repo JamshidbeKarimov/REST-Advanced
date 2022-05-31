@@ -17,4 +17,6 @@ public interface OrderService extends BaseService<OrderPostRequest, OrderGetResp
 
     List<OrderGetResponse> getByCertificateId(Long certificateId, int limit, int offset);
 
+    void validator(OrderPostRequest orderPostRequest);
+
 }

@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public List<UserEntity> getAll(int limit, int offset) {
-        return entityManager.createQuery("select u from users u", UserEntity.class)
+        return entityManager.createQuery("select u from UserEntity u", UserEntity.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
@@ -39,6 +39,15 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public Optional<UserEntity> findByName(String name) {
+        UserEntity userEntity = entityManager.createQuery("select u from UserEntity u where u.username = :name",
+                        UserEntity.class)
+                .setParameter("name", name)
+                .getSingleResult();
+        return Optional.of(userEntity);
+    }
+
+    @Override
     public UserEntity update(UserEntity obj) {
         return null;
     }
@@ -47,4 +56,6 @@ public class UserRepositoryImpl implements UserRepository{
     public int delete(Long id) {
         return 0;
     }
+
+
 }

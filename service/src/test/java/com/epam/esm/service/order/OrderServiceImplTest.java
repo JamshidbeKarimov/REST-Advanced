@@ -83,14 +83,6 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void validator() {
-        when(userRepository.findById(postRequest.getUserId())).thenReturn(Optional.empty());
-        assertThrows(NoDataFoundException.class, ()->{
-            orderService.validator(postRequest);
-        });
-    }
-
-    @Test
     void getOrdersByUserId() {
         List<OrderEntity> orders = getOrders();
         when(orderRepository.getOrdersByUserId(1L, 10, 0)).thenReturn(orders);
