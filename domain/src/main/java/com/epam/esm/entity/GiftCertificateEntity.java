@@ -1,12 +1,16 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class GiftCertificateEntity extends BaseEntity{
     private String name;
     private String description;
+    @DecimalMin(message = "price cannot be negative", value = "0.00")
     private BigDecimal price;
     private Integer duration;
 
@@ -32,4 +37,10 @@ public class GiftCertificateEntity extends BaseEntity{
             joinColumns = @JoinColumn(name = "certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<TagEntity> tagEntities;
+
+    public void setPrice(String price) {
+        if(price == null || price.equals(""))
+            return;
+        this.price = new BigDecimal(price);
+    }
 }

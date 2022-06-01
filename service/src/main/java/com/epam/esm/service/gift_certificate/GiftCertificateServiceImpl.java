@@ -2,9 +2,10 @@ package com.epam.esm.service.gift_certificate;
 
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
+import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.InvalidInputException;
+import com.epam.esm.exception.BreakingDataRelationshipException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
 import com.epam.esm.exception.tag.InvalidTagException;
@@ -14,10 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     @Override
     @Transactional
     public int delete(Long certificateId) {
-        return giftCertificateRepository.delete(certificateId);
+        try {
+            return giftCertificateRepository.delete(certificateId);
+        }catch (Exception e){
+            throw new BreakingDataRelationshipException("this certificate is ordered by users, so it cannot be deleted");
+        }
     }
 
     @Override
@@ -85,7 +89,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
 
     @Override
     @Transactional
-    public GiftCertificateGetResponse update(GiftCertificatePostRequest update, Long certificateId) {
+    public GiftCertificateGetResponse update(GiftCertificateUpdateRequest update, Long certificateId) {
         Optional<GiftCertificateEntity> old = giftCertificateRepository.findById(certificateId);
         if(old.isEmpty())
             throw new NoDataFoundException("certificate with id: " + certificateId + " not found");

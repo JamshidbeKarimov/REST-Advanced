@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
+import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.gift_certificate.GiftCertificateService;
@@ -24,6 +25,12 @@ public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
 
+    private static void accept(GiftCertificateGetResponse certificate) {
+        certificate.add(linkTo(methodOn(OrderController.class)
+                .getOrdersForCertificate(certificate.getId(), 100, 0))
+                .withRel("orders"));
+    }
+
     @PostMapping(value = "/create")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> create(
             @Valid @RequestBody GiftCertificatePostRequest createCertificate,
@@ -32,9 +39,7 @@ public class GiftCertificateController {
         if(bindingResult.hasErrors())
             throw new InvalidInputException(bindingResult);
         GiftCertificateGetResponse response = giftCertificateService.create(createCertificate);
-        response.add(linkTo(methodOn(OrderController.class)
-                .getOrdersForCertificate(response.getId(), 100, 0))
-                .withRel("orders"));
+        accept(response);
         return ResponseEntity.status(201)
                 .body(new BaseResponse<>(201, "certificate created", response));
     }
@@ -45,9 +50,7 @@ public class GiftCertificateController {
             @RequestParam Long id
     ){
         GiftCertificateGetResponse response = giftCertificateService.get(id);
-        response.add(linkTo(methodOn(OrderController.class)
-                        .getOrdersForCertificate(response.getId(), 100, 0))
-                .withRel("orders"));
+        accept(response);
         return ResponseEntity.ok(new BaseResponse(200, "gift certificate", response));
     }
 
@@ -65,11 +68,9 @@ public class GiftCertificateController {
         List<GiftCertificateGetResponse> certificates = giftCertificateService.getAll(
                 searchWord, tagName, doNameSort, doDateSort, isDescending, limit, offset
         );
-        certificates.forEach(certificate -> {
-            certificate.add(linkTo(methodOn(OrderController.class)
-                    .getOrdersForCertificate(certificate.getId(), 100, 0))
-                    .withRel("orders"));
-        });
+        for (GiftCertificateGetResponse certificate : certificates) {
+            accept(certificate);
+        }
         return ResponseEntity.ok(new BaseResponse<>(200,"certificate list", certificates));
     }
 
@@ -81,11 +82,9 @@ public class GiftCertificateController {
     ){
         List<GiftCertificateGetResponse> certificates
                 = giftCertificateService.searchWithMultipleTags(tags, limit, offset);
-        certificates.forEach(certificate -> {
-            certificate.add(linkTo(methodOn(OrderController.class)
-                    .getOrdersForCertificate(certificate.getId(), 100, 0))
-                    .withRel("orders"));
-        });
+        for (GiftCertificateGetResponse certificate : certificates) {
+            accept(certificate);
+        }
         return ResponseEntity.ok(new BaseResponse<>(200,"certificate list", certificates));
     }
 
@@ -101,16 +100,14 @@ public class GiftCertificateController {
 
     @PatchMapping(value = "/update")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> update(
-            @Valid @RequestBody GiftCertificatePostRequest update,
+            @Valid @RequestBody GiftCertificateUpdateRequest update,
             BindingResult bindingResult,
             @RequestParam(value = "id") Long certificateId
     ){
         if(bindingResult.hasErrors())
             throw new InvalidInputException(bindingResult);
         GiftCertificateGetResponse response = giftCertificateService.update(update, certificateId);
-        response.add(linkTo(methodOn(OrderController.class)
-                .getOrdersForCertificate(response.getId(), 100, 0))
-                .withRel("orders"));
+        accept(response);
         return ResponseEntity.ok(new BaseResponse<>(200, "certificate updated", response));
     }
 
@@ -120,9 +117,7 @@ public class GiftCertificateController {
             @RequestParam int duration
     ){
         GiftCertificateGetResponse response = giftCertificateService.updateDuration(duration, id);
-        response.add(linkTo(methodOn(OrderController.class)
-                .getOrdersForCertificate(response.getId(), 100, 0))
-                .withRel("orders"));
+        accept(response);
         return ResponseEntity.ok(new BaseResponse<>(200, "duration updated", response));
     }
 }

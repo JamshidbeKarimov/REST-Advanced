@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "tag")
@@ -16,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class TagEntity extends BaseEntity{
-    @NotBlank(message = "tag name cannot be empty or null")
     private String name;
 
 

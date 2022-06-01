@@ -24,7 +24,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderEntity> getAll(int limit, int offset) {
-        return entityManager.createQuery("select o from OrderEntity o", OrderEntity.class)
+        return entityManager.createQuery(GET_ALL_ORDERS, OrderEntity.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
@@ -51,7 +51,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<OrderEntity> getOrdersByUserId(Long userId, int limit, int offset) {
         return entityManager
-                .createQuery("select o from OrderEntity o where o.user.id = :id", OrderEntity.class)
+                .createQuery(GET_ORDER_BY_USER_ID, OrderEntity.class)
                 .setParameter("id", userId)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
@@ -62,7 +62,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Optional<OrderEntity> getByUserIdAndOrderId(Long userId, Long orderId){
         List<OrderEntity> orders = entityManager
                 .createQuery(
-                        "select o from OrderEntity o where o.user.id = :userId and o.id = :orderId", OrderEntity.class)
+                        GET_ORDER_BY_USER_ID_AND_ORDER_ID, OrderEntity.class)
                 .setParameter("userId", userId)
                 .setParameter("orderId", orderId)
                 .getResultList();
@@ -75,7 +75,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<OrderEntity> getByCertificateId(Long certificateId, int limit, int offset) {
         return entityManager
-                .createQuery("select o from OrderEntity o where o.certificate.id = :id", OrderEntity.class)
+                .createQuery(GET_ORDERS_BY_CERTIFICATE_ID, OrderEntity.class)
                 .setParameter("id", certificateId)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
@@ -86,7 +86,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Optional<OrderEntity> getByUserIdAndCertificateId(Long userId, Long certificateId) {
         List<OrderEntity> resultList
                 = entityManager.createQuery(
-                        "select o from OrderEntity o where o.certificate.id = :certificateId and o.user.id = :userId",
+                        GET_ORDER_BY_USER_ID_AND_CERTIFICATE_ID,
                         OrderEntity.class)
                 .setParameter("certificateId", certificateId)
                 .setParameter("userId", userId)

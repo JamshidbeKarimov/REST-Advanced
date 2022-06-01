@@ -2,6 +2,7 @@ package com.epam.esm.service.gift_certificate;
 
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
+import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.repository.gift_certificate.GiftCertificateRepository;
@@ -65,17 +66,17 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void canGetById() {
-        when(giftCertificateRepository.findById(1l)).thenReturn(Optional.of(entity));
+        when(giftCertificateRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(modelMapper.map(entity, GiftCertificateGetResponse.class)).thenReturn(getResponse);
-        GiftCertificateGetResponse response = giftCertificateService.get(1l);
+        GiftCertificateGetResponse response = giftCertificateService.get(1L);
 
         assertEquals("Store", response.getName());
     }
 
     @Test
     void canDeleteById() {
-        when(giftCertificateRepository.delete(1l)).thenReturn(1);
-        int delete = giftCertificateService.delete(1l);
+        when(giftCertificateRepository.delete(1L)).thenReturn(1);
+        int delete = giftCertificateService.delete(1L);
 
         assertEquals(1, delete);
     }
@@ -94,7 +95,7 @@ class GiftCertificateServiceImplTest {
                 .thenReturn(giftCertificateEntities.subList(0, 1));
         when(giftCertificateRepository
                 .getAllWithSearchAndTagName(
-                        "Kid", 1l, false, false, false, 1, 0))
+                        "Kid", 1L, false, false, false, 1, 0))
                 .thenReturn(giftCertificateEntities.subList(1, 2));
 
         when(modelMapper.map(giftCertificateEntities, new TypeToken<List<GiftCertificateGetResponse>>(){}.getType()))
@@ -119,27 +120,27 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void canUpdateCertificate() {
-        GiftCertificatePostRequest update = postRequest;
+        GiftCertificateUpdateRequest update = getGiftCertificateUpdateRequest();
         GiftCertificateEntity old = getGiftCertificateEntity();
 
-        when(giftCertificateRepository.findById(1l)).thenReturn(Optional.of(old));
+        when(giftCertificateRepository.findById(1L)).thenReturn(Optional.of(old));
         when(giftCertificateRepository.update(old)).thenReturn(entity);
         when(modelMapper.getConfiguration()).thenReturn(new InheritingConfiguration());
         when(modelMapper.map(entity, GiftCertificateGetResponse.class)).thenReturn(getResponse);
         doNothing().when(modelMapper).map(update, old);
 
-        GiftCertificateGetResponse update1 = giftCertificateService.update(update, 1l);
+        GiftCertificateGetResponse update1 = giftCertificateService.update(update, 1L);
 
         assertEquals("Store", update1.getName());
     }
 
     @Test
     void updateDuration() {
-        when(giftCertificateRepository.updateDuration(1, 1l)).thenReturn(1);
-        when(giftCertificateRepository.findById(1l)).thenReturn(Optional.of(entity));
+        when(giftCertificateRepository.updateDuration(1, 1L)).thenReturn(1);
+        when(giftCertificateRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(modelMapper.map(entity, GiftCertificateGetResponse.class)).thenReturn(getResponse);
 
-        GiftCertificateGetResponse response = giftCertificateService.updateDuration(1, 1l);
+        GiftCertificateGetResponse response = giftCertificateService.updateDuration(1, 1L);
         assertEquals("Store", response.getName());
         assertEquals(10, response.getDuration());
     }

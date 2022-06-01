@@ -1,6 +1,8 @@
 package com.epam.esm.repository.tag;
 
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.exception.BreakingDataRelationshipException;
+import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -8,6 +10,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+
+import static com.epam.esm.repository.gift_certificate.GiftCertificateQueries.DELETE;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
@@ -25,7 +29,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public List<TagEntity> getAll(int limit, int offset) {
         return entityManager
-                .createQuery("select t from TagEntity t", TagEntity.class)
+                .createQuery(GET_ALL, TagEntity.class)
                 .setMaxResults(limit)
                 .setFirstResult(offset)
                 .getResultList();
@@ -46,7 +50,8 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public int delete(Long id) {
-        return entityManager.createQuery("delete from TagEntity where id = :id")
+        return entityManager
+                .createQuery(DELETE)
                 .setParameter("id", id)
                 .executeUpdate();
     }
@@ -54,10 +59,8 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public TagEntity findByName(String name) {
         try {
-            TagEntity tag = entityManager.createQuery(
-                            "select t from TagEntity t where t.name = :name", TagEntity.class)
+            return entityManager.createQuery(FIND_BY_NAME, TagEntity.class)
                     .setParameter("name", name).getSingleResult();
-            return tag;
         } catch (NoResultException e) {
             return null;
         }
@@ -65,17 +68,8 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public List<TagEntity> getMostWidelyUserTagOfUser(Long userId) {
-        List tags = entityManager.createNativeQuery("""
-                        select t from tag t where t.id in (select ct.tag_id from certificate_tag ct where ct.certificate_id in
-                                         (select gc.id from gift_certificate gc where gc.id in
-                                                   (select o.certificate_id from orders o where o.user_id = :userId))
-                        group by ct.tag_id having count(ct.tag_id) = (
-                            select count(ct.tag_id) from certificate_tag ct where ct.certificate_id in
-                                                    (select gc.id from gift_certificate gc where gc.id in 
-                                                            (select o.certificate_id from orders o where o.user_id = :userId))
-                            group by ct.tag_id order by count(ct.tag_id) desc limit 1));""", TagEntity.class)
+        return entityManager.createNativeQuery(GET_MOST_USED_TAG_OF_USER, TagEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
-        return tags;
     }
 }

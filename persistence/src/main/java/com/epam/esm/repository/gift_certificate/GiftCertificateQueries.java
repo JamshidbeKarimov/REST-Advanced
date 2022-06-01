@@ -4,12 +4,16 @@ public interface GiftCertificateQueries {
 
     String GET_ALL = "select * from gift_certificate gc";
     String DELETE = "delete from GiftCertificateEntity where id = :id";
-    String UPDATE_DURATION = "update GiftCertificateEntity set duration ? where id = ?";
+    String UPDATE_DURATION = "update gift_certificate set duration = :duration where id = :id";
     String GET_ALL_WITH_SEARCH
             = "select * from gift_certificate gc" +
               " where gc.name ilike '%'|| :searchWord || '%' or gc.description ilike '%'|| :searchWord || '%'";
     String SEARCH_WITH_MULTIPLE_TAGS
-            = "select distinct gc from GiftCertificateEntity gc JOIN gc.tagEntities t WHERE t IN (:tagEntities)";
+            = "select gc FROM GiftCertificateEntity gc " +
+              "join gc.tagEntities t " +
+              "where t in (:tags) " +
+              "group by gc.id " +
+              "having count(gc) = :tagCount";
     String GET_ALL_WITH_SEARCH_AND_TAG_NAME = """       
                         select * from gift_certificate gc join certificate_tag ct on gc.id = ct.certificate_id
                         where ct.tag_id = :tagId and

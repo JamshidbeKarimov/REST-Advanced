@@ -1,25 +1,23 @@
 package com.epam.esm.dto.request;
 
-
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.*;
-import java.math.BigDecimal;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class GiftCertificatePostRequest {
-    @NotBlank(message = "name can't be null or empty")
+public class GiftCertificateUpdateRequest {
     private String name;
     private String description;
     @Nullable
@@ -27,5 +25,4 @@ public class GiftCertificatePostRequest {
     @Positive(message = "duration should be positive")
     private Integer duration;
     private List<TagEntity> tagEntities;
-
 }

@@ -15,4 +15,5 @@ public class TagGetResponse {
     private Long id;
     private String name;
     private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
 }

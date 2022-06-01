@@ -5,7 +5,7 @@ import com.epam.esm.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<UserEntity, Long>{
+public interface UserRepository extends CrudRepository<UserEntity, Long>, UserQueries{
 
     Optional<UserEntity> findByName(String name);
 }

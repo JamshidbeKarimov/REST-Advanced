@@ -4,15 +4,18 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.TagGetResponse;
 import com.epam.esm.dto.request.TagPostRequest;
+import com.epam.esm.entity.TagEntity;
 import com.epam.esm.exception.InvalidInputException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.tag.TagService;
+import com.epam.esm.service.test.TestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.*;
 import java.util.List;
 
 @RestController
@@ -21,6 +24,7 @@ import java.util.List;
 public class TagController {
 
     private final TagService tagService;
+    private final TestService testService;
 
     @PostMapping(value = "/create")
     public ResponseEntity<BaseResponse<TagGetResponse>> create(

@@ -44,12 +44,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
 
     @Override
     public GiftCertificateEntity update(GiftCertificateEntity certificateUpdate) {
-        GiftCertificateEntity updated = entityManager.merge(certificateUpdate);
-        return updated;
+        return entityManager.merge(certificateUpdate);
     }
 
     @Override
     public int delete(Long id) {
+
         return entityManager
                 .createQuery(DELETE)
                 .setParameter("id", id)
@@ -58,23 +58,21 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
 
     @Override
     public int updateDuration(int duration, Long id) {
-        int update = entityManager.createNativeQuery(
+        return entityManager.createNativeQuery(
                         UPDATE_DURATION)
-                .setParameter(1, duration)
-                .setParameter(2, id)
+                .setParameter("duration", duration)
+                .setParameter("id", id)
                 .executeUpdate();
-        return update;
     }
 
 
     @Override
     public List<GiftCertificateEntity> searchWithMultipleTags(List<TagEntity> tags, int limit, int offset) {
-        return entityManager.createQuery(
-                        SEARCH_WITH_MULTIPLE_TAGS,
-                        GiftCertificateEntity.class)
-                .setParameter("tagEntities", tags)
-                .setFirstResult(offset)
+        return entityManager.createQuery(SEARCH_WITH_MULTIPLE_TAGS, GiftCertificateEntity.class)
+                .setParameter("tags", tags)
+                .setParameter("tagCount", (long) tags.size())
                 .setMaxResults(limit)
+                .setFirstResult(offset)
                 .getResultList();
     }
 

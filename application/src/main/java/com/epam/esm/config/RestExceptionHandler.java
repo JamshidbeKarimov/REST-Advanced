@@ -1,21 +1,20 @@
 package com.epam.esm.config;
 
 import com.epam.esm.dto.reponse.BaseExceptionResponse;
-import com.epam.esm.exception.DataAlreadyExistException;
-import com.epam.esm.exception.InvalidInputException;
-import com.epam.esm.exception.NoDataFoundException;
-import com.epam.esm.exception.UnknownDataBaseException;
+import com.epam.esm.exception.*;
 import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
 import com.epam.esm.exception.tag.InvalidTagException;
 import com.epam.esm.exception.user.InvalidUserException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,11 +80,34 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({InvalidInputException.class})
     public ResponseEntity<BaseExceptionResponse> invalidInputException(InvalidInputException e){
         StringBuilder message = new StringBuilder();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
-            message.append(error.getDefaultMessage() + "\n");
-        });
+        e.getBindingResult().getAllErrors().forEach((error) -> message.append(error.getDefaultMessage()).append("\n"));
         return ResponseEntity.badRequest()
                 .body(new BaseExceptionResponse(400, message.toString(), 10400));
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<BaseExceptionResponse> numberFormatExceptionHandler(NumberFormatException e){
+        return ResponseEntity.status(400).body(
+                new BaseExceptionResponse(400, e.getMessage(), 10400)
+        );
+    }
+
+    @ExceptionHandler(BreakingDataRelationshipException.class)
+    public ResponseEntity<BaseExceptionResponse> breakingDataRelationshipExceptionHandler(
+            BreakingDataRelationshipException e
+    ){
+        return ResponseEntity.status(400).body(
+                new BaseExceptionResponse(400, e.getMessage(), 10400)
+        );
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<BaseExceptionResponse> constraintViolationExceptionHandler(ConstraintViolationException e){
+        StringBuilder message = new StringBuilder();
+        e.getConstraintViolations().forEach(violation -> message.append(violation.getMessage()).append("\n"));
+        return ResponseEntity.status(400).body(
+                new BaseExceptionResponse(400, message.toString(), 10400)
+        );
     }
 
 }

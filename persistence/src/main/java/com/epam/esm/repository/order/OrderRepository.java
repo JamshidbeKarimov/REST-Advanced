@@ -6,7 +6,7 @@ import com.epam.esm.entity.OrderEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface OrderRepository extends CrudRepository<OrderEntity, Long>{
+public interface OrderRepository extends CrudRepository<OrderEntity, Long>, OrderQueries{
 
     List<OrderEntity> getOrdersByUserId(Long userId, int limit, int offset);
 

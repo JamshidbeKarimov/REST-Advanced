@@ -2,6 +2,7 @@ package com.epam.esm.service.utils;
 
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
+import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.entity.GiftCertificateEntity;
 
 import java.math.BigDecimal;
@@ -14,10 +15,10 @@ public class GiftCertificateServiceTestUtils {
 
     public static GiftCertificateEntity getGiftCertificateEntity() {
         GiftCertificateEntity certificateEntity = new GiftCertificateEntity();
-        certificateEntity.setId(1l);
+        certificateEntity.setId(1L);
         certificateEntity.setName("Test");
         certificateEntity.setDescription("Test description");
-        certificateEntity.setPrice(new BigDecimal(20));
+        certificateEntity.setPrice("20");
         certificateEntity.setDuration(30);
         certificateEntity.setTagEntities(TagServiceTestUtils.getTagEntities());
         certificateEntity.setCreateDate(LocalDateTime.of(2019, Month.JUNE, 3, 16, 43));
@@ -27,7 +28,7 @@ public class GiftCertificateServiceTestUtils {
 
     public static GiftCertificateGetResponse getGiftCertificateGetResponse(){
         GiftCertificateGetResponse certificateGetResponse = new GiftCertificateGetResponse();
-        certificateGetResponse.setId(1l);
+        certificateGetResponse.setId(1L);
         certificateGetResponse.setName("Store");
         certificateGetResponse.setDescription("this is for stores");
         certificateGetResponse.setDuration(10);
@@ -40,15 +41,25 @@ public class GiftCertificateServiceTestUtils {
         GiftCertificatePostRequest giftCertificatePostRequest = new GiftCertificatePostRequest();
         giftCertificatePostRequest.setName("Store");
         giftCertificatePostRequest.setDescription("Gift certificate for stores");
-        giftCertificatePostRequest.setPrice(new BigDecimal(20));
+        giftCertificatePostRequest.setPrice("20");
         giftCertificatePostRequest.setDuration(30);
         giftCertificatePostRequest.setTagEntities((TagServiceTestUtils.getTagEntities()));
         return giftCertificatePostRequest;
     }
 
+    public static GiftCertificateUpdateRequest getGiftCertificateUpdateRequest(){
+        GiftCertificateUpdateRequest giftCertificateUpdateRequest = new GiftCertificateUpdateRequest();
+        giftCertificateUpdateRequest.setName("Store");
+        giftCertificateUpdateRequest.setDescription("Gift certificate for stores");
+        giftCertificateUpdateRequest.setPrice("20");
+        giftCertificateUpdateRequest.setDuration(30);
+        giftCertificateUpdateRequest.setTagEntities((TagServiceTestUtils.getTagEntities()));
+        return giftCertificateUpdateRequest;
+    }
+
     public static List<GiftCertificateEntity> getGiftCertificateEntities() {
         GiftCertificateEntity certificateEntity = new GiftCertificateEntity();
-        certificateEntity.setId(1l);
+        certificateEntity.setId(1L);
         certificateEntity.setName("Store");
 
         GiftCertificateEntity certificateEntity1 = new GiftCertificateEntity();
@@ -57,7 +68,7 @@ public class GiftCertificateServiceTestUtils {
         certificateEntity1.setTagEntities(TagServiceTestUtils.getTagEntities());
 
         GiftCertificateEntity certificateEntity2 = new GiftCertificateEntity();
-        certificateEntity2.setId(3l);
+        certificateEntity2.setId(3L);
         certificateEntity2.setName("Men");
 
         return Arrays.asList(
@@ -67,7 +78,7 @@ public class GiftCertificateServiceTestUtils {
 
     public static List<GiftCertificateGetResponse> getGiftCertificateGetResponses() {
         GiftCertificateGetResponse certificateGetResponse = new GiftCertificateGetResponse();
-        certificateGetResponse.setId(1l);
+        certificateGetResponse.setId(1L);
         certificateGetResponse.setName("Store");
 
         GiftCertificateGetResponse certificateGetResponse1 = new GiftCertificateGetResponse();
@@ -76,7 +87,7 @@ public class GiftCertificateServiceTestUtils {
         certificateGetResponse1.setTagEntities(TagServiceTestUtils.getTagEntities());
 
         GiftCertificateGetResponse certificateGetResponse2 = new GiftCertificateGetResponse();
-        certificateGetResponse2.setId(3l);
+        certificateGetResponse2.setId(3L);
         certificateGetResponse2.setName("Men");
         return Arrays.asList(
                 certificateGetResponse, certificateGetResponse1, certificateGetResponse2

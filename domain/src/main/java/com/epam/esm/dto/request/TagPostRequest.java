@@ -13,6 +13,6 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class TagPostRequest {
-    @NotBlank(message = "tag name cannot be empty")
+    @NotBlank(message = "tag name cannot be empty or null")
     private String name;
 }

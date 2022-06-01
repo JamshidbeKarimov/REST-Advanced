@@ -3,6 +3,7 @@ package com.epam.esm.service.gift_certificate;
 import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
+import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
 import com.epam.esm.resources.GiftCertificateResource;
 import com.epam.esm.service.base.BaseService;
@@ -17,7 +18,7 @@ public interface GiftCertificateService extends BaseService<GiftCertificatePostR
             boolean isDescending, int limit, int offset
     );
 
-    GiftCertificateGetResponse update(GiftCertificatePostRequest update, Long certificateId);
+    GiftCertificateGetResponse update(GiftCertificateUpdateRequest update, Long certificateId);
 
     GiftCertificateGetResponse updateDuration(int duration, Long id);
 
