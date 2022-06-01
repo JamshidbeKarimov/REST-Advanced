@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService{
         return modelMapper.map(userEntities, new TypeToken<List<UserGetResponse>>() {
         }.getType());
     }
-//
+
     void checkExist(String username){
         if(userRepository.findByName(username).isPresent())
             throw new DataAlreadyExistException("user with username: " + username + "already exists");

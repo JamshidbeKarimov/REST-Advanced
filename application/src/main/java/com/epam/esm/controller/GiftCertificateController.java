@@ -22,20 +22,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/api/gift_certificate")
 @AllArgsConstructor
 public class GiftCertificateController {
-
     private final GiftCertificateService giftCertificateService;
-
-    private static void accept(GiftCertificateGetResponse certificate) {
-        certificate.add(linkTo(methodOn(OrderController.class)
-                .getOrdersForCertificate(certificate.getId(), 100, 0))
-                .withRel("orders"));
-    }
 
     @PostMapping(value = "/create")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> create(
             @Valid @RequestBody GiftCertificatePostRequest createCertificate,
-            BindingResult bindingResult
-            ){
+            BindingResult bindingResult)
+    {
         if(bindingResult.hasErrors())
             throw new InvalidInputException(bindingResult);
         GiftCertificateGetResponse response = giftCertificateService.create(createCertificate);
@@ -47,8 +40,8 @@ public class GiftCertificateController {
     @GetMapping(value = "/get")
     @ResponseBody
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> get(
-            @RequestParam Long id
-    ){
+            @RequestParam Long id)
+    {
         GiftCertificateGetResponse response = giftCertificateService.get(id);
         accept(response);
         return ResponseEntity.ok(new BaseResponse(200, "gift certificate", response));
@@ -62,9 +55,8 @@ public class GiftCertificateController {
             @RequestParam(required = false, name = "do_date_sort") boolean doDateSort,
             @RequestParam(required = false, name = "is_descending") boolean isDescending,
             @RequestParam(required = false, name = "limit", defaultValue = "10") int limit,
-            @RequestParam(required = false, name = "offset", defaultValue = "0") int offset
-
-    ){
+            @RequestParam(required = false, name = "offset", defaultValue = "0") int offset)
+    {
         List<GiftCertificateGetResponse> certificates = giftCertificateService.getAll(
                 searchWord, tagName, doNameSort, doDateSort, isDescending, limit, offset
         );
@@ -78,8 +70,8 @@ public class GiftCertificateController {
     public ResponseEntity<BaseResponse<List<GiftCertificateGetResponse>>> getWithMultipleTags(
             @RequestParam(value = "tag") List<String> tags,
             @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "0") int offset
-    ){
+            @RequestParam(defaultValue = "0") int offset)
+    {
         List<GiftCertificateGetResponse> certificates
                 = giftCertificateService.searchWithMultipleTags(tags, limit, offset);
         for (GiftCertificateGetResponse certificate : certificates) {
@@ -90,20 +82,18 @@ public class GiftCertificateController {
 
     @DeleteMapping(value = "/delete")
     public ResponseEntity<BaseResponse> delete(
-            @RequestParam Long id
-    ){
+            @RequestParam Long id)
+    {
         int delete = giftCertificateService.delete(id);
-        if(delete == 1)
-            return ResponseEntity.ok(new BaseResponse(204, "certificate deleted", null));
-        throw new NoDataFoundException("no certificate to delete with id: " + id);
+        return ResponseEntity.ok(new BaseResponse(204, "certificate deleted", null));
     }
 
     @PatchMapping(value = "/update")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> update(
             @Valid @RequestBody GiftCertificateUpdateRequest update,
             BindingResult bindingResult,
-            @RequestParam(value = "id") Long certificateId
-    ){
+            @RequestParam(value = "id") Long certificateId)
+    {
         if(bindingResult.hasErrors())
             throw new InvalidInputException(bindingResult);
         GiftCertificateGetResponse response = giftCertificateService.update(update, certificateId);
@@ -114,10 +104,16 @@ public class GiftCertificateController {
     @PatchMapping(value = "/update/duration")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> updateDuration(
             @RequestParam Long id,
-            @RequestParam int duration
-    ){
+            @RequestParam String duration)
+    {
         GiftCertificateGetResponse response = giftCertificateService.updateDuration(duration, id);
         accept(response);
         return ResponseEntity.ok(new BaseResponse<>(200, "duration updated", response));
+    }
+
+    private static void accept(GiftCertificateGetResponse certificate) {
+        certificate.add(linkTo(methodOn(OrderController.class)
+                .getOrdersForCertificate(certificate.getId(), 100, 0))
+                .withRel("orders"));
     }
 }

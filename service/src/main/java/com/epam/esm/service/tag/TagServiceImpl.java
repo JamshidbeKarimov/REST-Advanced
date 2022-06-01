@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TagServiceImpl implements TagService{
+public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final ModelMapper modelMapper;
 
@@ -26,13 +26,10 @@ public class TagServiceImpl implements TagService{
 
     @Override
     @Transactional
-    public TagGetResponse create(TagPostRequest createTag){
+    public TagGetResponse create(TagPostRequest createTag) {
         TagEntity tagEntity = modelMapper.map(createTag, TagEntity.class);
         TagEntity createdTag = tagRepository.create(tagEntity);
-        if(createdTag != null) {
-            return modelMapper.map(createdTag, TagGetResponse.class);
-        }
-        throw new DataAlreadyExistException("tag with name: " + createdTag.getName() + "already exists");
+        return modelMapper.map(createdTag, TagGetResponse.class);
     }
 
     @Override

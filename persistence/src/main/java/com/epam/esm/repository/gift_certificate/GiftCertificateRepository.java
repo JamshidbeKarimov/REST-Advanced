@@ -27,8 +27,7 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
             boolean doDateSort,
             boolean isDescending,
             int limit,
-            int offset
-    );
+            int offset);
 
     List<GiftCertificateEntity> getAllWithSearch(
             String searchWord,
@@ -36,13 +35,13 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
             boolean doDateSort,
             boolean isDescending,
             int limit,
-            int offset
-    );
+            int offset);
 
 
     List<GiftCertificateEntity> searchWithMultipleTags(List<TagEntity> tags, int limit, int offset);
 
-    default String getSorting(boolean doNameSort, boolean doDateSort, boolean isDescending){
+    default String getSorting(boolean doNameSort, boolean doDateSort, boolean isDescending)
+    {
         if (doNameSort){
             if(doDateSort){
                 if(isDescending)
@@ -52,13 +51,12 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
             if(isDescending)
                 return ORDER_NAME_DESC;
             return ORDER_NAME;
-        }
-        else if(doDateSort){
+        } else if(doDateSort){
             if(isDescending){
                 return ORDER_DATE_DESC;
             }
             return ORDER_DATE;
-        }else
+        } else
             return NO_ORDER;
     }
 }

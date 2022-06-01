@@ -25,7 +25,8 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<UserGetResponse>> create(
             @Valid @RequestBody UserPostRequest userPostRequest,
-            BindingResult bindingResult){
+            BindingResult bindingResult)
+    {
         if(bindingResult.hasErrors())
             throw new InvalidInputException(bindingResult);
         UserGetResponse createdUser = userService.create(userPostRequest);
@@ -36,8 +37,8 @@ public class UserController {
 
     @GetMapping("/get")
     public ResponseEntity<BaseResponse<UserGetResponse>> get(
-            @RequestParam Long id
-    ){
+            @RequestParam Long id)
+    {
         UserGetResponse response = userService.get(id);
         response.add(linkTo(methodOn(OrderController.class)
                 .getUserOrders(response.getId(), 100, 0)).withRel("user orders"));
@@ -47,13 +48,11 @@ public class UserController {
     @GetMapping("/get_all")
     public ResponseEntity<BaseResponse<List<UserGetResponse>>> getAll(
             @RequestParam(required = false, defaultValue = "10") int limit,
-            @RequestParam(required = false, defaultValue = "0") int offset
-    ){
+            @RequestParam(required = false, defaultValue = "0") int offset)
+    {
         List<UserGetResponse> userList = userService.getAll(limit, offset);
-        userList.forEach(user -> {
-            user.add(linkTo(methodOn(OrderController.class)
-                    .getUserOrders(user.getId(), 100, 0)).withRel("user orders"));
-        });
+        userList.forEach(user -> user.add(linkTo(methodOn(OrderController.class)
+                .getUserOrders(user.getId(), 100, 0)).withRel("user orders")));
         return ResponseEntity.ok(new BaseResponse<>(200, "users list", userList));
     }
 }

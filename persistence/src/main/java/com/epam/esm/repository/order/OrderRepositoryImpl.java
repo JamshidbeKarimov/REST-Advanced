@@ -1,6 +1,7 @@
 package com.epam.esm.repository.order;
 
 import com.epam.esm.entity.OrderEntity;
+import com.epam.esm.exception.UnknownDataBaseException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,10 +17,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public OrderEntity create(OrderEntity order) {
         entityManager.persist(order);
-        long id = order.getId();
-        if(id != 0)
+        if(order.getId() != 0)
             return order;
-        return null;
+        throw new UnknownDataBaseException("there was a problem while creating gift certificate. Try again");
     }
 
     @Override
@@ -66,7 +66,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setParameter("userId", userId)
                 .setParameter("orderId", orderId)
                 .getResultList();
-
         if(orders.isEmpty())
             return Optional.empty();
         return Optional.of(orders.get(0));
@@ -91,7 +90,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setParameter("certificateId", certificateId)
                 .setParameter("userId", userId)
                 .getResultList();
-
         if(resultList.isEmpty())
             return Optional.empty();
         return Optional.of(resultList.get(0));

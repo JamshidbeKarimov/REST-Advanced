@@ -1,12 +1,14 @@
 package com.epam.esm.repository.user;
 
 import com.epam.esm.entity.UserEntity;
+import com.epam.esm.exception.UnknownDataBaseException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
@@ -18,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository{
         entityManager.persist(userEntity);
         if(userEntity.getId() != null)
             return userEntity;
-        return null;
+        throw new UnknownDataBaseException("there was a problem while creating gift certificate. Try again");
     }
 
     @Override

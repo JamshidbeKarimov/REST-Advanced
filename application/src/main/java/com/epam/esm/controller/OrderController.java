@@ -22,8 +22,8 @@ public class OrderController {
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<OrderGetResponse>> create(
             @Valid @RequestBody OrderPostRequest orderPostRequest,
-            BindingResult bindingResult
-            ){
+            BindingResult bindingResult)
+    {
         if(bindingResult.hasErrors())
             throw new InvalidInputException(bindingResult);
         OrderGetResponse response = orderService.create(orderPostRequest);
@@ -34,8 +34,8 @@ public class OrderController {
     public ResponseEntity<BaseResponse<List<OrderGetResponse>>> getUserOrders(
             @RequestParam Long id,
             @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "0") int offset
-    ){
+            @RequestParam(defaultValue = "0") int offset)
+    {
         List<OrderGetResponse> responses = orderService.getOrdersByUserId(id, limit, offset);
         return ResponseEntity.ok(new BaseResponse<>(200, "user orders", responses));
     }
@@ -44,8 +44,8 @@ public class OrderController {
     public ResponseEntity<BaseResponse<List<OrderGetResponse>>> getOrdersForCertificate(
             @RequestParam Long id,
             @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "0") int offset
-    ){
+            @RequestParam(defaultValue = "0") int offset)
+    {
         List<OrderGetResponse> certificateOrders = orderService.getByCertificateId(id, limit, offset);
         return ResponseEntity.ok(new BaseResponse<>(200, "orders for certificate", certificateOrders));
     }
@@ -53,8 +53,8 @@ public class OrderController {
     @GetMapping("/get/user_order")
     public ResponseEntity<BaseResponse<OrderGetResponse>> getOrder(
             @RequestParam Long userId,
-            @RequestParam Long orderId
-    ){
+            @RequestParam Long orderId)
+    {
         OrderGetResponse order = orderService.getByUserIdAndOrderId(userId, orderId);
         return ResponseEntity.ok(new BaseResponse<>(200, "order retrieved", order));
     }

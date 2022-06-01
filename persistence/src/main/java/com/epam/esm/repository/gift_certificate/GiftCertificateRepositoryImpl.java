@@ -2,25 +2,28 @@ package com.epam.esm.repository.gift_certificate;
 
 import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.exception.NoDataFoundException;
+import com.epam.esm.exception.UnknownDataBaseException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 
 @Repository
-public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
+public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public GiftCertificateEntity create(GiftCertificateEntity certificate) {
         entityManager.persist(certificate);
-        if(certificate.getId() != null)
+        if (certificate.getId() != null)
             return certificate;
-        return null;
+        throw new UnknownDataBaseException("there was a problem while creating gift certificate. Try again");
     }
 
     @Override
@@ -35,9 +38,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
     @Override
     public Optional<GiftCertificateEntity> findById(Long id) {
         GiftCertificateEntity certificateEntity = entityManager.find(GiftCertificateEntity.class, id);
-        if(certificateEntity != null)
+        if (certificateEntity != null)
             return Optional.of(certificateEntity);
-        return Optional.empty();
+        throw new NoDataFoundException("no certificate found with id: " + id);
     }
 
     @Override
@@ -47,7 +50,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
 
     @Override
     public int delete(Long id) {
-
         return entityManager
                 .createQuery(DELETE)
                 .setParameter("id", id)
@@ -60,6 +62,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
                         UPDATE_DURATION)
                 .setParameter("duration", duration)
                 .setParameter("id", id)
+                .setParameter("time", LocalDateTime.now())
                 .executeUpdate();
     }
 
@@ -77,16 +80,16 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
     @Override
     public List<GiftCertificateEntity> getAllWithSearchAndTagName(
             String searchWord, Long tagId, boolean doNameSort, boolean doDateSort,
-            boolean isDescending, int limit, int offset
-    ){
-        String query = GET_ALL_WITH_SEARCH_AND_TAG_NAME + getSorting(doNameSort, doDateSort, isDescending);
-            return entityManager.createNativeQuery(
-                            query, GiftCertificateEntity.class)
-                    .setParameter("searchWord", searchWord)
-                    .setParameter("tagId", tagId)
-                    .setFirstResult(offset)
-                    .setMaxResults(limit)
-                    .getResultList();
+            boolean isDescending, int limit, int offset) {
+        String query
+                = GET_ALL_WITH_SEARCH_AND_TAG_NAME + getSorting(doNameSort, doDateSort, isDescending);
+        return entityManager.createNativeQuery(
+                        query, GiftCertificateEntity.class)
+                .setParameter("searchWord", searchWord)
+                .setParameter("tagId", tagId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
@@ -102,7 +105,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository{
     }
 
     @Override
-    public List<GiftCertificateEntity> getAllOnly(boolean doNameSort, boolean doDateSort, boolean isDescending, int limit, int offset) {
+    public List<GiftCertificateEntity> getAllOnly(
+            boolean doNameSort, boolean doDateSort, boolean isDescending, int limit, int offset) {
         return entityManager
                 .createNativeQuery(
                         GET_ALL + getSorting(doNameSort, doDateSort, isDescending),

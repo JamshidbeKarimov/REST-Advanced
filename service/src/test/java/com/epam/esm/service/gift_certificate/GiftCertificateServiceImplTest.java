@@ -86,7 +86,7 @@ class GiftCertificateServiceImplTest {
         List<GiftCertificateGetResponse> giftCertificateGetResponses = getGiftCertificateGetResponses();
         TagEntity tagEntity = getTestTagEntity();
 
-        when(tagRepository.findByName("toy")).thenReturn(tagEntity);
+        when(tagRepository.findByName("toy")).thenReturn(Optional.of(tagEntity));
         when(giftCertificateRepository.getAllOnly(false, false, false, 3, 0))
                 .thenReturn(giftCertificateEntities);
         when(giftCertificateRepository
@@ -139,7 +139,7 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(modelMapper.map(entity, GiftCertificateGetResponse.class)).thenReturn(getResponse);
 
-        GiftCertificateGetResponse response = giftCertificateService.updateDuration(1, 1L);
+        GiftCertificateGetResponse response = giftCertificateService.updateDuration("1", 1L);
         assertEquals("Store", response.getName());
         assertEquals(10, response.getDuration());
     }
@@ -151,7 +151,7 @@ class GiftCertificateServiceImplTest {
         List<GiftCertificateEntity> giftCertificateEntities = getGiftCertificateEntities();
         List<GiftCertificateGetResponse> giftCertificateGetResponses = getGiftCertificateGetResponses();
 
-        when(tagRepository.findByName("tag")).thenReturn(tagEntities.get(0));
+        when(tagRepository.findByName("tag")).thenReturn(Optional.of(tagEntities.get(0)));
         when(giftCertificateRepository.searchWithMultipleTags(tagEntities, 1, 0))
                 .thenReturn(giftCertificateEntities);
         when(modelMapper.map(giftCertificateEntities, new TypeToken<List<GiftCertificateGetResponse>>() {}.getType()))

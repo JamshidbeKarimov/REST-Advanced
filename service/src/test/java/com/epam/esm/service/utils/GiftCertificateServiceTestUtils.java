@@ -26,7 +26,7 @@ public class GiftCertificateServiceTestUtils {
         return certificateEntity;
     }
 
-    public static GiftCertificateGetResponse getGiftCertificateGetResponse(){
+    public static GiftCertificateGetResponse getGiftCertificateGetResponse() {
         GiftCertificateGetResponse certificateGetResponse = new GiftCertificateGetResponse();
         certificateGetResponse.setId(1L);
         certificateGetResponse.setName("Store");
@@ -47,7 +47,7 @@ public class GiftCertificateServiceTestUtils {
         return giftCertificatePostRequest;
     }
 
-    public static GiftCertificateUpdateRequest getGiftCertificateUpdateRequest(){
+    public static GiftCertificateUpdateRequest getGiftCertificateUpdateRequest() {
         GiftCertificateUpdateRequest giftCertificateUpdateRequest = new GiftCertificateUpdateRequest();
         giftCertificateUpdateRequest.setName("Store");
         giftCertificateUpdateRequest.setDescription("Gift certificate for stores");

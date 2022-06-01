@@ -1,6 +1,8 @@
 package com.epam.esm.repository.tag;
 
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.exception.NoDataFoundException;
+import com.epam.esm.exception.UnknownDataBaseException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,7 +23,7 @@ public class TagRepositoryImpl implements TagRepository {
         entityManager.persist(tagEntity);
         if (tagEntity.getId() != null)
             return tagEntity;
-        return null;
+        throw new UnknownDataBaseException("there was a problem while creating gift certificate. Try again");
     }
 
     @Override
@@ -49,18 +51,19 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public int delete(Long id) {
         return entityManager
-                .createQuery(DELETE)
+                .createQuery(DELETE_BY_ID)
                 .setParameter("id", id)
                 .executeUpdate();
     }
 
     @Override
-    public TagEntity findByName(String name) {
+    public Optional<TagEntity> findByName(String name) {
         try {
-            return entityManager.createQuery(FIND_BY_NAME, TagEntity.class)
+            TagEntity tag = entityManager.createQuery(FIND_BY_NAME, TagEntity.class)
                     .setParameter("name", name).getSingleResult();
+            return Optional.of(tag);
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

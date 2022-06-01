@@ -42,44 +42,41 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
 
     @Override
     public GiftCertificateGetResponse get(Long certificateId) {
-        GiftCertificateGetResponse result;
-        Optional<GiftCertificateEntity> certificate = giftCertificateRepository.findById(certificateId);
-        if (certificate.isPresent()) {
-            result = modelMapper.map(certificate.get(), GiftCertificateGetResponse.class);
-        } else {
-            throw new NoDataFoundException("no certificate found with id: " + certificateId);
-        }
-        return result;
+        GiftCertificateEntity certificate = giftCertificateRepository.findById(certificateId).get();
+        return modelMapper.map(certificate, GiftCertificateGetResponse.class);
     }
 
     @Override
     @Transactional
     public int delete(Long certificateId) {
-        try {
-            return giftCertificateRepository.delete(certificateId);
-        }catch (Exception e){
-            throw new BreakingDataRelationshipException("this certificate is ordered by users, so it cannot be deleted");
+        if(checkExist(certificateId)) {
+            try {
+                return giftCertificateRepository.delete(certificateId);
+            } catch (Exception e) {
+                throw new BreakingDataRelationshipException("this certificate is ordered by users, so it cannot be deleted");
+            }
         }
+        throw new NoDataFoundException("no certificate to delete with id: " + certificateId);
     }
 
     @Override
     public List<GiftCertificateGetResponse> getAll(
             String searchWord, String tagName, boolean doNameSort, boolean doDateSort,
-            boolean isDescending, int limit, int offset
-    ) {
+            boolean isDescending, int limit, int offset)
+    {
         List<GiftCertificateEntity> certificateEntities;
         if(tagName != null) {
             try {
-                Long tagId = tagRepository.findByName(tagName).getId();
+                Long tagId = tagRepository.findByName(tagName).get().getId();
                 certificateEntities = giftCertificateRepository.getAllWithSearchAndTagName(
                         searchWord, tagId, doNameSort, doDateSort, isDescending, limit, offset);
             }catch (NullPointerException e){
                 throw new NoDataFoundException("there is no gift certificate with tag name: "  + tagName);
             }
-        }else if(searchWord.equals("")){
+        } else if(searchWord.isEmpty()){
             certificateEntities = giftCertificateRepository.getAllOnly(
                     doNameSort, doDateSort, isDescending, limit, offset);
-        }else
+        } else
             certificateEntities = giftCertificateRepository.getAllWithSearch(
                     searchWord, doNameSort, doDateSort, isDescending, limit, offset);
         if(certificateEntities.size() == 0)
@@ -89,7 +86,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
 
     @Override
     @Transactional
-    public GiftCertificateGetResponse update(GiftCertificateUpdateRequest update, Long certificateId) {
+    public GiftCertificateGetResponse update(GiftCertificateUpdateRequest update, Long certificateId)
+    {
         Optional<GiftCertificateEntity> old = giftCertificateRepository.findById(certificateId);
         if(old.isEmpty())
             throw new NoDataFoundException("certificate with id: " + certificateId + " not found");
@@ -111,26 +109,33 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
 
     @Override
     @Transactional
-    public GiftCertificateGetResponse updateDuration(int duration, Long id) {
-        if(duration <= 0)
+    public GiftCertificateGetResponse updateDuration(String duration, Long id) {
+        int durationValue;
+        try{
+            durationValue = Integer.parseInt(duration);
+        }catch (NumberFormatException e){
+            throw new InvalidCertificateException("gift certificate duration should be numbers only");
+        }
+        if(durationValue <= 0)
             throw new InvalidCertificateException("certificate duration must be positive");
-        int updateDuration = giftCertificateRepository.updateDuration(duration, id);
-        if(updateDuration == 1) {
-            GiftCertificateEntity giftCertificateEntity = giftCertificateRepository.findById(id).get();
-            return modelMapper.map(giftCertificateEntity, GiftCertificateGetResponse.class);
+        if(giftCertificateRepository.findById(id).isPresent()){
+            int updateDuration = giftCertificateRepository.updateDuration(durationValue, id);
+            if(updateDuration == 1) {
+                GiftCertificateEntity giftCertificateEntity = giftCertificateRepository.findById(id).get();
+                return modelMapper.map(giftCertificateEntity, GiftCertificateGetResponse.class);
+            }
         }
         throw new NoDataFoundException("cannot find gift certificate with id: " + id);
     }
 
     @Override
     public List<GiftCertificateGetResponse> searchWithMultipleTags(
-            List<String> tags, int limit, int offset
-    ) {
+            List<String> tags, int limit, int offset)
+    {
         List<TagEntity> tagEntities = new ArrayList<>();
         tags.forEach(tag -> {
-            TagEntity byName = tagRepository.findByName(tag);
-            if(byName != null)
-                tagEntities.add(byName);
+            Optional<TagEntity> tagByName = tagRepository.findByName(tag);
+            tagByName.ifPresent(tagEntities::add);
         });
         List<GiftCertificateEntity> certificateEntities
                 = giftCertificateRepository.searchWithMultipleTags(tagEntities, limit, offset);
@@ -139,19 +144,23 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
         return modelMapper.map(certificateEntities, new TypeToken<List<GiftCertificateGetResponse>>() {}.getType());
     }
 
-    private List<TagEntity> createTags(List<TagEntity> tagEntities){
+    private List<TagEntity> createTags(List<TagEntity> tagEntities) {
         List<TagEntity> tagEntityList = new ArrayList<>();
         tagEntities.forEach(tag -> {
             if(tag.getName() == null || tag.getName().isEmpty()) {
                 throw new InvalidTagException("tag name cannot be empty or null");
             }
-            TagEntity byName = tagRepository.findByName(tag.getName());
-            if(byName != null){
-                tagEntityList.add(byName);
+            Optional<TagEntity> tagByName = tagRepository.findByName(tag.getName());
+            if(tagByName.isPresent()) {
+                tagEntityList.add(tagByName.get());
             }else{
                 tagEntityList.add(tagRepository.create(tag));
             }
         });
         return tagEntityList;
+    }
+
+    private boolean checkExist(Long id) {
+        return giftCertificateRepository.findById(id).isPresent();
     }
 }
