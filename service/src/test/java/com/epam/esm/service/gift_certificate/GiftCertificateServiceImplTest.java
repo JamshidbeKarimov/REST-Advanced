@@ -13,18 +13,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.internal.InheritingConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.epam.esm.service.utils.GiftCertificateServiceTestUtils.*;
 import static com.epam.esm.service.utils.TagServiceTestUtils.getTestTagEntity;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 

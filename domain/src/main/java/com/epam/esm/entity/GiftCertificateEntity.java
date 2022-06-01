@@ -1,16 +1,13 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 

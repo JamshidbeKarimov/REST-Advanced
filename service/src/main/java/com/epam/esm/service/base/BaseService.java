@@ -1,7 +1,5 @@
 package com.epam.esm.service.base;
 
-import com.epam.esm.dto.BaseResponse;
-
 public interface BaseService<P, G> {
     G create(P p);
 

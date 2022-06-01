@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +41,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     }
 
     @Override
-    @Transactional
     public GiftCertificateGetResponse get(Long certificateId) {
+        GiftCertificateGetResponse result;
         Optional<GiftCertificateEntity> certificate = giftCertificateRepository.findById(certificateId);
-        if(certificate.isPresent()){
-            return modelMapper.map(certificate.get(), GiftCertificateGetResponse.class);
+        if (certificate.isPresent()) {
+            result = modelMapper.map(certificate.get(), GiftCertificateGetResponse.class);
+        } else {
+            throw new NoDataFoundException("no certificate found with id: " + certificateId);
         }
-        throw new NoDataFoundException("no certificate found with id: " + certificateId);
+        return result;
     }
 
     @Override
@@ -62,7 +63,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     }
 
     @Override
-    @Transactional
     public List<GiftCertificateGetResponse> getAll(
             String searchWord, String tagName, boolean doNameSort, boolean doDateSort,
             boolean isDescending, int limit, int offset

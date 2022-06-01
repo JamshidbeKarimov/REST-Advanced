@@ -9,13 +9,5 @@ import java.io.*;
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-
-
-
-        // Declaring a string variable
-        String st;
-        // Condition holds true till
-        // there is character in a string
-
     }
 }

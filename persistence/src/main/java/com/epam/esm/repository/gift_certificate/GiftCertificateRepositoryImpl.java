@@ -1,6 +1,5 @@
 package com.epam.esm.repository.gift_certificate;
 
-import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.entity.TagEntity;
 import org.springframework.stereotype.Repository;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 

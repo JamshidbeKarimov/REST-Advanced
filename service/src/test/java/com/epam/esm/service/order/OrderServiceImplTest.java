@@ -3,7 +3,6 @@ package com.epam.esm.service.order;
 import com.epam.esm.dto.reponse.OrderGetResponse;
 import com.epam.esm.dto.request.OrderPostRequest;
 import com.epam.esm.entity.OrderEntity;
-import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.repository.gift_certificate.GiftCertificateRepository;
 import com.epam.esm.repository.order.OrderRepository;
 import com.epam.esm.repository.user.UserRepository;
@@ -24,8 +23,8 @@ import java.util.Optional;
 import static com.epam.esm.service.utils.GiftCertificateServiceTestUtils.getGiftCertificateEntity;
 import static com.epam.esm.service.utils.OrderServiceTestUtils.*;
 import static com.epam.esm.service.utils.UserServiceTestUtils.getUser;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

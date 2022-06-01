@@ -16,8 +16,6 @@ import javax.persistence.Table;
 @Setter
 public class TagEntity extends BaseEntity{
     private String name;
-
-
 }
 
 

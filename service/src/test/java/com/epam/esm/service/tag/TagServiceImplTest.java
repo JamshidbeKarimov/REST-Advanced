@@ -9,19 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static com.epam.esm.service.utils.TagServiceTestUtils.getTagEntities;
-import static com.epam.esm.service.utils.TagServiceTestUtils.getTagGetResponses;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
-
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.epam.esm.service.utils.TagServiceTestUtils.getTagEntities;
+import static com.epam.esm.service.utils.TagServiceTestUtils.getTagGetResponses;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
@@ -64,10 +63,10 @@ class TagServiceImplTest {
 
     @Test
     void canGetTagById(){
-        when(tagRepository.findById(1l)).thenReturn(Optional.of(tag));
+        when(tagRepository.findById(1L)).thenReturn(Optional.of(tag));
         when(modelMapper.map(tag, TagGetResponse.class)).thenReturn(tagGetResponse);
 
-        TagGetResponse response = tagService.get(1l);
+        TagGetResponse response = tagService.get(1L);
 
         assertEquals(tagGetResponse, response);
     }
@@ -87,9 +86,9 @@ class TagServiceImplTest {
 
     @Test
     void canDeleteById(){
-        when(tagRepository.delete(1l)).thenReturn(1);
+        when(tagRepository.delete(1L)).thenReturn(1);
 
-        int delete = tagService.delete(1l);
+        int delete = tagService.delete(1L);
 
         assertEquals(1, delete);
     }

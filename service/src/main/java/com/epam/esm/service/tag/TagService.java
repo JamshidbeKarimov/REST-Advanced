@@ -1,9 +1,7 @@
 package com.epam.esm.service.tag;
 
-import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.TagGetResponse;
 import com.epam.esm.dto.request.TagPostRequest;
-import com.epam.esm.exception.tag.InvalidTagException;
 import com.epam.esm.service.base.BaseService;
 import org.springframework.stereotype.Service;
 

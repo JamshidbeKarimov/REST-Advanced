@@ -1,9 +1,7 @@
 package com.epam.esm.service.user;
 
-import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.UserGetResponse;
 import com.epam.esm.dto.request.UserPostRequest;
-import com.epam.esm.exception.user.InvalidUserException;
 import com.epam.esm.service.base.BaseService;
 
 import java.util.List;

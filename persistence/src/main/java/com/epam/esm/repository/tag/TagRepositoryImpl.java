@@ -1,8 +1,6 @@
 package com.epam.esm.repository.tag;
 
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.BreakingDataRelationshipException;
-import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

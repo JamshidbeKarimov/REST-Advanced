@@ -2,16 +2,14 @@ package com.epam.esm.dto.request;
 
 
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.gift_certificate.InvalidCertificateException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.*;
-import java.math.BigDecimal;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @AllArgsConstructor

@@ -1,6 +1,5 @@
 package com.epam.esm.repository.gift_certificate;
 
-import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.repository.CrudRepository;
