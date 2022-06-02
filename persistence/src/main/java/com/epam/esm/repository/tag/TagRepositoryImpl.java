@@ -1,7 +1,6 @@
 package com.epam.esm.repository.tag;
 
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.exception.UnknownDataBaseException;
 import org.springframework.stereotype.Repository;
 
@@ -10,8 +9,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-
-import static com.epam.esm.repository.gift_certificate.GiftCertificateQueries.DELETE;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {

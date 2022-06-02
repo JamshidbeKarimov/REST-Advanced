@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -91,6 +92,16 @@ class TagServiceImplTest {
         int delete = tagService.delete(1L);
 
         assertEquals(1, delete);
+    }
+
+    @Test
+    void canGetMostWidelyUsedTagsOfUser(){
+        List<TagEntity> tagEntities = getTagEntities();
+        when(tagRepository.getMostWidelyUserTagOfUser(1L)).thenReturn(tagEntities);
+        when(modelMapper.map(tagEntities, new TypeToken<List<TagGetResponse>>() {}.getType()))
+                .thenReturn(getTagGetResponses());
+        List<TagGetResponse> mostWidelyUsedTagsOfUser = tagService.getMostWidelyUsedTagsOfUser(1L);
+        assertEquals(5, mostWidelyUsedTagsOfUser.size());
     }
 
 

@@ -5,6 +5,7 @@ import com.epam.esm.exception.UnknownDataBaseException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
@@ -42,11 +43,15 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Optional<UserEntity> findByName(String name) {
-        UserEntity userEntity = entityManager.createQuery(FIND_BY_NAME,
-                        UserEntity.class)
-                .setParameter("name", name)
-                .getSingleResult();
-        return Optional.of(userEntity);
+        try {
+            UserEntity userEntity = entityManager.createQuery(FIND_BY_NAME,
+                            UserEntity.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.of(userEntity);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

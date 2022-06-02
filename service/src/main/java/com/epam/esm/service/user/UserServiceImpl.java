@@ -2,9 +2,9 @@ package com.epam.esm.service.user;
 
 import com.epam.esm.dto.reponse.UserGetResponse;
 import com.epam.esm.dto.request.UserPostRequest;
+import com.epam.esm.entity.UserEntity;
 import com.epam.esm.exception.DataAlreadyExistException;
 import com.epam.esm.exception.NoDataFoundException;
-import com.epam.esm.entity.UserEntity;
 import com.epam.esm.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService{
     }
 
     void checkExist(String username){
-        if(userRepository.findByName(username).isPresent())
-            throw new DataAlreadyExistException("user with username: " + username + "already exists");
+         if (userRepository.findByName(username).isPresent())
+            throw new DataAlreadyExistException("user with username: \"" + username + "\" already exists");
     }
 }

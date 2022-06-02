@@ -5,7 +5,6 @@ import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
 import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.exception.InvalidInputException;
-import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.gift_certificate.GiftCertificateService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

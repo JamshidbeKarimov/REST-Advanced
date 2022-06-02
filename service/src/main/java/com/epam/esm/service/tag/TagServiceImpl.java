@@ -3,7 +3,6 @@ package com.epam.esm.service.tag;
 import com.epam.esm.dto.reponse.TagGetResponse;
 import com.epam.esm.dto.request.TagPostRequest;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.DataAlreadyExistException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.repository.tag.TagRepository;
 import org.modelmapper.ModelMapper;

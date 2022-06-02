@@ -34,10 +34,4 @@ public class GiftCertificateEntity extends BaseEntity{
             joinColumns = @JoinColumn(name = "certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<TagEntity> tagEntities;
-
-    public void setPrice(String price) {
-        if(price == null || price.equals(""))
-            return;
-        this.price = new BigDecimal(price);
-    }
 }

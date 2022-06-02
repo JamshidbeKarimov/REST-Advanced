@@ -18,7 +18,7 @@ public class GiftCertificateServiceTestUtils {
         certificateEntity.setId(1L);
         certificateEntity.setName("Test");
         certificateEntity.setDescription("Test description");
-        certificateEntity.setPrice("20");
+        certificateEntity.setPrice(new BigDecimal("20"));
         certificateEntity.setDuration(30);
         certificateEntity.setTagEntities(TagServiceTestUtils.getTagEntities());
         certificateEntity.setCreateDate(LocalDateTime.of(2019, Month.JUNE, 3, 16, 43));
@@ -41,7 +41,7 @@ public class GiftCertificateServiceTestUtils {
         GiftCertificatePostRequest giftCertificatePostRequest = new GiftCertificatePostRequest();
         giftCertificatePostRequest.setName("Store");
         giftCertificatePostRequest.setDescription("Gift certificate for stores");
-        giftCertificatePostRequest.setPrice("20");
+        giftCertificatePostRequest.setPrice(new BigDecimal("20"));
         giftCertificatePostRequest.setDuration(30);
         giftCertificatePostRequest.setTagEntities((TagServiceTestUtils.getTagEntities()));
         return giftCertificatePostRequest;
