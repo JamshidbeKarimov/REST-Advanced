@@ -136,12 +136,11 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void updateDuration() {
-        when(giftCertificateRepository.updateDuration(1, 1L)).thenReturn(1);
+        when(giftCertificateRepository.updateDuration(entity)).thenReturn(entity);
         when(giftCertificateRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(modelMapper.map(entity, GiftCertificateGetResponse.class)).thenReturn(getResponse);
 
-        GiftCertificateGetResponse response = giftCertificateService.updateDuration("1", 1L);
-        assertEquals("Store", response.getName());
+        GiftCertificateGetResponse response = giftCertificateService.updateDuration(1, 1L);
         assertEquals(10, response.getDuration());
     }
 

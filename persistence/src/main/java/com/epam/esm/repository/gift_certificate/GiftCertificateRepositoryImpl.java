@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     @PersistenceContext
@@ -57,13 +56,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public int updateDuration(int duration, Long id) {
-        return entityManager.createNativeQuery(
-                        UPDATE_DURATION)
-                .setParameter("duration", duration)
-                .setParameter("id", id)
-                .setParameter("time", LocalDateTime.now())
-                .executeUpdate();
+    public GiftCertificateEntity updateDuration(GiftCertificateEntity certificate) {
+        return entityManager.merge(
+                        certificate);
     }
 
 

@@ -4,7 +4,9 @@ import com.epam.esm.dto.BaseResponse;
 import com.epam.esm.dto.reponse.GiftCertificateGetResponse;
 import com.epam.esm.dto.request.GiftCertificatePostRequest;
 import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
+import com.epam.esm.entity.GiftCertificateEntity;
 import com.epam.esm.exception.InvalidInputException;
+import com.epam.esm.exception.UnknownDataBaseException;
 import com.epam.esm.service.gift_certificate.GiftCertificateService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -103,7 +105,7 @@ public class GiftCertificateController {
     @PatchMapping(value = "/update/duration")
     public ResponseEntity<BaseResponse<GiftCertificateGetResponse>> updateDuration(
             @RequestParam Long id,
-            @RequestParam String duration)
+            @RequestParam int duration)
     {
         GiftCertificateGetResponse response = giftCertificateService.updateDuration(duration, id);
         accept(response);

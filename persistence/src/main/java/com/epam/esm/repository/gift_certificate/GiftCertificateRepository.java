@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface GiftCertificateRepository extends CrudRepository<GiftCertificateEntity, Long>, GiftCertificateQueries {
 
-    int updateDuration(int duration, Long id);
+    GiftCertificateEntity updateDuration(GiftCertificateEntity certificateEntity);
 
     List<GiftCertificateEntity> getAllOnly(
             boolean doNameSort,

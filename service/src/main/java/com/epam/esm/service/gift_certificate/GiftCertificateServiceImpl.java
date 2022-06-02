@@ -109,21 +109,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
 
     @Override
     @Transactional
-    public GiftCertificateGetResponse updateDuration(String duration, Long id) {
-        int durationValue;
-        try{
-            durationValue = Integer.parseInt(duration);
-        }catch (NumberFormatException e){
-            throw new InvalidCertificateException("gift certificate duration should be numbers only");
-        }
-        if(durationValue <= 0)
+    public GiftCertificateGetResponse updateDuration(Integer duration, Long id) {
+        if(duration <= 0)
             throw new InvalidCertificateException("certificate duration must be positive");
-        if(giftCertificateRepository.findById(id).isPresent()){
-            int updateDuration = giftCertificateRepository.updateDuration(durationValue, id);
-            if(updateDuration == 1) {
-                GiftCertificateEntity giftCertificateEntity = giftCertificateRepository.findById(id).get();
-                return modelMapper.map(giftCertificateEntity, GiftCertificateGetResponse.class);
-            }
+        Optional<GiftCertificateEntity> certificateEntityOptional = giftCertificateRepository.findById(id);
+        if(certificateEntityOptional.isPresent()) {
+            GiftCertificateEntity certificate = certificateEntityOptional.get();
+            certificate.setDuration(duration);
+            return modelMapper.map(giftCertificateRepository.updateDuration(certificate), GiftCertificateGetResponse.class);
         }
         throw new NoDataFoundException("cannot find gift certificate with id: " + id);
     }

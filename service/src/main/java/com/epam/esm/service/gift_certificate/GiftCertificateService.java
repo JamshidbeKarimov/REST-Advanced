@@ -16,7 +16,7 @@ public interface GiftCertificateService extends BaseService<GiftCertificatePostR
 
     GiftCertificateGetResponse update(GiftCertificateUpdateRequest update, Long certificateId);
 
-    GiftCertificateGetResponse updateDuration(String duration, Long id);
+    GiftCertificateGetResponse updateDuration(Integer duration, Long id);
 
     List<GiftCertificateGetResponse> searchWithMultipleTags(List<String> tags, int limit, int offset);
 }
