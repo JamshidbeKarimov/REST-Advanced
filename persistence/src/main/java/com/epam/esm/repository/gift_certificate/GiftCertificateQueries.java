@@ -14,10 +14,9 @@ public interface GiftCertificateQueries {
               "where t in (:tags) " +
               "group by gc.id " +
               "having count(gc) = :tagCount";
-    String GET_ALL_WITH_SEARCH_AND_TAG_NAME = """       
-                        select * from gift_certificate gc join certificate_tag ct on gc.id = ct.certificate_id
-                        where ct.tag_id = :tagId and
-                        (gc.name ilike '%'|| :searchWord || '%' or gc.description ilike '%'|| :searchWord || '%')""";
+    String GET_ALL_WITH_SEARCH_AND_TAG_NAME = "select * from gift_certificate gc join certificate_tag ct on " +
+                                              "gc.id = ct.certificate_id where ct.tag_id = :tagId and" +
+                        "(gc.name ilike '%'|| :searchWord || '%' or gc.description ilike '%'|| :searchWord || '%')";
 
     String ORDER_NAME_DATE_DESC = " order by gc.name desc, gc.create_date desc";
     String ORDER_NAME_DATE = " order by gc.name, gc.create_date";
